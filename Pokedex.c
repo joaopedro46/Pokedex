@@ -20,7 +20,7 @@ int main()
                 registro();
                 break;
             case 2:
-                lista();
+                list_all();
                 break;
             //case 3:
             //case 4:

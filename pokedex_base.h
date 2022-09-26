@@ -13,8 +13,10 @@ typedef struct
     int velocidade;
 }pokemon;
 
+//Procedimento que imprime o menu de opções
 void menu()
 {
+    system("cls");
     printf("\t\t\tMENU\n");
     printf("\n\t1. Registrar Pokemon\n");
     printf("\t2. Listar Pokemons registrados\n");
@@ -24,28 +26,64 @@ void menu()
     printf("\nDigite a opção desejada: ");
 }
 
+//Função que lista todos os pokemons registrados na Pokedex
+int list_all()
+{
+    //Criação do ponteiro e alocação de memória para os dados que serão lidos do arquivo
+    pokemon *Pokemon;
+    Pokemon = malloc(sizeof(pokemon));
+    //Abertura do arquivo
+    FILE *fp = fopen("Pokedex.dat", "rb");
+    if(!fp)
+    {
+        printf("Can't open file\n");
+        return -1;
+    }
+    //lê 1 byte * tamanho da struct pokemon do arquivo "Pokedex.dat"
+    //armazena na área de mémoria apontada por Pokemon e imprime os dados lidos
+    while(fread(Pokemon, sizeof(pokemon), 1, fp))
+    {
+        printf("\nPokemon #%d: ",Pokemon->id);
+        printf("\nNome: %s",Pokemon->nome);
+        printf("Tipo: %s",Pokemon->tipo);
+        printf("Altura: %.2f\n",Pokemon->altura);
+        printf("Peso: %.2f\n",Pokemon->peso);
+        printf("Attack: %d\n",Pokemon->attack);
+        printf("SP Ataque: %d\n",Pokemon->SP_attack);
+        printf("Defense: %d\n",Pokemon->defense);
+        printf("SP Defesa: %d\n",Pokemon->SP_defense);
+        printf("Velocidade: %d\n\n",Pokemon->velocidade);
+        system("pause");
+    }
+    //Liberação da memória utilizada
+    free(Pokemon);
+    return 0;
+}
+
 //Função que armazena os dados dos pokemons no arquivo
 int registro()
 {
+    //Alocação de memória para os dados que serão lidos
     pokemon *new_pokemon = malloc(sizeof(pokemon));
     if(!new_pokemon)
     {
         printf("Falha ao alocar memória\n");
         exit(1);
     }
-    printf("Alocação de memória bem sucedida\n");
-    FILE *fp = fopen("Pokedex.dat", "r+");
+    //Abertura do arquivo "Pokedex.dat"
+    FILE *fp = fopen("Pokedex.dat", "ab");
     if(!fp)
     {
         printf("Falha ao abrir o arquivo\n");
     }
-    printf("File opened successfully\n");
     
+    //Enquanto os dados digitados não forem confirmados
+    //ou caso forem digitados dados incorretos
+    //é feita a releitura
     char confirmation = 'n';
     while(confirmation == 'n' || confirmation == 'N')
     {
         system("cls");
-        new_pokemon->id = rand() % 1000;
         fflush(stdin);
         printf("Nome do Pokemon: ");
         fgets(new_pokemon->nome, sizeof(new_pokemon->nome),stdin);
@@ -65,7 +103,11 @@ int registro()
         scanf("%d", &new_pokemon->SP_defense);
         printf("Valor do atributo de Velocidade: ");
         scanf("%d", &new_pokemon->velocidade);
+        fflush(stdin);
 
+        //Exibe os dados digitados para verificação
+        printf("Os dados digitados estão corretos?\n");
+        printf("\nID: %d",new_pokemon->id);
         printf("\nNome: %s",new_pokemon->nome);
         printf("Tipo: %s",new_pokemon->tipo);
         printf("Altura: %.2f\n",new_pokemon->altura);
@@ -76,20 +118,18 @@ int registro()
         printf("SP Defesa: %d\n",new_pokemon->SP_defense);
         printf("Velocidade: %d\n",new_pokemon->velocidade);
         fflush(stdin);
-        printf("Os dados digitados estão corretos? ");
+        printf("\nDigite \"n\" ou \"N\" para digitar os dados novamente.");
+        printf("\nDigite qualquer outra tecla para confirmar o registro dos dados. ");
         scanf("%c",&confirmation);
     }
-    
 
+    //Testa se os dados foram escritos no arquivo
     int test = fwrite(new_pokemon, 1, sizeof(pokemon), fp);
     if(!test)
     printf("Erro ao escrever no arquivo");
+    printf("Pokemon registrado.\n");
     fclose(fp);
     free(new_pokemon);
+    system("pause");
     return 0;
-}
-
-int lista()
-{
-
 }
