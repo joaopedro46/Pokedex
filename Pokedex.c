@@ -4,6 +4,7 @@
 #include <locale.h>
 #include "pokedex_base.h"
 
+
 int main()
 {
     srand(time(NULL));

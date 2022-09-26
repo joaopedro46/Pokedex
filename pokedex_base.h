@@ -60,6 +60,7 @@ int list_all()
     return 0;
 }
 
+
 //Função que armazena os dados dos pokemons no arquivo
 int registro()
 {
