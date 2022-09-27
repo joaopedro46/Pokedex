@@ -4,12 +4,11 @@
 #include <locale.h>
 #include "pokedex_base.h"
 
-
 int main()
 {
     srand(time(NULL));
     setlocale(LC_ALL, "Portuguese");
-    
+    struct tm *teste1;
     int op = 0;
     while(op != 5)
     {

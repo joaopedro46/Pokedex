@@ -1,3 +1,8 @@
+void clean_stdin(void){
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 //Struct para armazenar dados dos pokemons
 typedef struct
 {
@@ -11,12 +16,13 @@ typedef struct
     int defense;
     int SP_defense;
     int velocidade;
+    time_t data_captura;
 }pokemon;
 
 //Procedimento que imprime o menu de opções
 void menu()
 {
-    system("cls");
+    system("cls || clear");
     printf("\t\t\tMENU\n");
     printf("\n\t1. Registrar Pokemon\n");
     printf("\t2. Listar Pokemons registrados\n");
@@ -53,7 +59,7 @@ int list_all()
         printf("Defense: %d\n",Pokemon->defense);
         printf("SP Defesa: %d\n",Pokemon->SP_defense);
         printf("Velocidade: %d\n\n",Pokemon->velocidade);
-        system("pause");
+        getchar();
     }
     //Liberação da memória utilizada
     free(Pokemon);
@@ -82,10 +88,12 @@ int registro()
     //ou caso forem digitados dados incorretos
     //é feita a releitura
     char confirmation = 'n';
+    clean_stdin();
     while(confirmation == 'n' || confirmation == 'N')
     {
-        system("cls");
-        fflush(stdin);
+        //system("cls || clear");
+        //
+        time(&new_pokemon->data_captura);
         printf("Nome do Pokemon: ");
         fgets(new_pokemon->nome, sizeof(new_pokemon->nome),stdin);
         printf("Tipo do Pokemon: ");
@@ -104,13 +112,14 @@ int registro()
         scanf("%d", &new_pokemon->SP_defense);
         printf("Valor do atributo de Velocidade: ");
         scanf("%d", &new_pokemon->velocidade);
-        fflush(stdin);
+        clean_stdin();
 
         //Exibe os dados digitados para verificação
         printf("Os dados digitados estão corretos?\n");
         printf("\nID: %d",new_pokemon->id);
         printf("\nNome: %s",new_pokemon->nome);
         printf("Tipo: %s",new_pokemon->tipo);
+        printf("Data de captura: %s",ctime(&new_pokemon->data_captura));
         printf("Altura: %.2f\n",new_pokemon->altura);
         printf("Peso: %.2f\n",new_pokemon->peso);
         printf("Attack: %d\n",new_pokemon->attack);
@@ -118,10 +127,10 @@ int registro()
         printf("Defense: %d\n",new_pokemon->defense);
         printf("SP Defesa: %d\n",new_pokemon->SP_defense);
         printf("Velocidade: %d\n",new_pokemon->velocidade);
-        fflush(stdin);
         printf("\nDigite \"n\" ou \"N\" para digitar os dados novamente.");
         printf("\nDigite qualquer outra tecla para confirmar o registro dos dados. ");
         scanf("%c",&confirmation);
+        getchar();
     }
 
     //Testa se os dados foram escritos no arquivo
