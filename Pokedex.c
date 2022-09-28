@@ -6,10 +6,11 @@
 
 int main()
 {
-    srand(time(NULL));
+    FILE *fp;
+    fp = fopen("Pokedex.dat","ab");
+    fclose(fp);
     setlocale(LC_ALL, "Portuguese");
-    struct tm *teste1;
-    int op = 0;
+    int op,id = get_id();
     while(op != 5)
     {
         menu();
@@ -17,13 +18,20 @@ int main()
         switch(op)
         {
             case 1:
-                registro();
+                registro(&id);
                 break;
             case 2:
                 list_all();
                 break;
-            //case 3:
-            //case 4:
+            case 3:
+                int id_a_buscar;
+                printf("Digite o ID que deseja buscar: ");
+                scanf("%d", &id_a_buscar);
+                list_id(id_a_buscar);
+                break;
+            case 4:
+                //remove_pokemon();
+                break;
             case 5:
                 break;
 
@@ -34,6 +42,6 @@ int main()
                 break;
         }
     }
-    system("pause");
+    //system("pause");
     return 0;
 }
