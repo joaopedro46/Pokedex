@@ -6,11 +6,15 @@
 
 int main()
 {
+	printf("Alunos\n\nFábio Antonelli\nJoão Pedro\nLucas Tavares\n");
+	printf("Aperte enter para continuar...\n");
+	getchar();
     FILE *fp;
     fp = fopen("Pokedex.dat","ab");
     fclose(fp);
     setlocale(LC_ALL, "Portuguese");
     int op,id = get_id();
+    int id_a_buscar;
     while(op != 5)
     {
         menu();
@@ -24,13 +28,9 @@ int main()
                 list_all();
                 break;
             case 3:
-                int id_a_buscar;
                 printf("Digite o ID que deseja buscar: ");
                 scanf("%d", &id_a_buscar);
                 list_id(id_a_buscar);
-                break;
-            case 4:
-                //remove_pokemon();
                 break;
             case 5:
                 break;

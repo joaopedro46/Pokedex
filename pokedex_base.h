@@ -6,7 +6,6 @@ void clean_stdin(void){
 //Struct para armazenar dados dos pokemons
 typedef struct
 {
-    int ativo;
     int id;
     char nome[100];
     char tipo[100];
@@ -28,7 +27,6 @@ void menu()
     printf("\n\t1. Registrar Pokemon\n");
     printf("\t2. Listar Pokemons registrados\n");
     printf("\t3. Buscar Pokemon por ID\n");
-    printf("\t4. Remover Pokemon do registro\n");
     printf("\t5. Fechar Pokedex\n");
     printf("\nDigite a opção desejada: ");
 }
@@ -69,22 +67,20 @@ int list_all()
     int count = 0;
     while(fread(Pokemon, sizeof(pokemon), 1, fp))
     {
-        if(Pokemon->ativo==1)
-        {
-            printf("\nPokemon #%d: ",Pokemon->id);
-            printf("\nNome: %s",Pokemon->nome);
-            printf("Tipo: %s",Pokemon->tipo);
-            printf("Altura: %.2f\n",Pokemon->altura);
-            printf("Peso: %.2f\n",Pokemon->peso);
-            printf("Attack: %d\n",Pokemon->attack);
-            printf("SP Ataque: %d\n",Pokemon->SP_attack);
-            printf("Defense: %d\n",Pokemon->defense);
-            printf("SP Defesa: %d\n",Pokemon->SP_defense);
-            printf("Velocidade: %d\n\n",Pokemon->velocidade);
-            printf("Pressione enter para continuar...\n");
-            count++;
-            getchar();
-        }
+        printf("\nPokemon #%d: ",Pokemon->id);
+        printf("\nNome: %s",Pokemon->nome);
+        printf("Tipo: %s",Pokemon->tipo);
+        printf("Data de captura: %s",ctime(&Pokemon->data_captura));
+        printf("Altura: %.2f\n",Pokemon->altura);
+        printf("Peso: %.2f\n",Pokemon->peso);
+        printf("Attack: %d\n",Pokemon->attack);
+        printf("SP Ataque: %d\n",Pokemon->SP_attack);
+        printf("Defense: %d\n",Pokemon->defense);
+        printf("SP Defesa: %d\n",Pokemon->SP_defense);
+        printf("Velocidade: %d\n\n",Pokemon->velocidade);
+        printf("Pressione enter para continuar...\n");
+        count++;
+        getchar();
     }
     if(count < 1)
     {
@@ -120,7 +116,7 @@ int list_id(int id)
     int sucesso = 0;
     while(fread(Pokemon, sizeof(pokemon), 1, fp))
     {
-        if(Pokemon->id == id && Pokemon->ativo == 1)
+        if(Pokemon->id == id)
         {
             printf("\nID: %d",Pokemon->id);
             printf("\nNome: %s",Pokemon->nome);
@@ -170,7 +166,6 @@ int registro(int *id)
     while(confirmation == 'n' || confirmation == 'N')
     {
         system("cls || clear");
-        new_pokemon->ativo = 1;
         new_pokemon->id = get_id()+1;
         time(&new_pokemon->data_captura);
         printf("Nome do Pokemon: ");
@@ -221,43 +216,5 @@ int registro(int *id)
     fclose(fp);
     free(new_pokemon);
     //system("pause");
-    return 0;
-}
-
-int remove_pokemon()
-{
-    clean_stdin();
-
-    int id_remove;
-    char confirmation = 'n';
-    while(confirmation == 'n' || confirmation == 'N')
-    {
-        printf("Digite o id do pokemon que deseja remover: ");
-        scanf("%d",&id_remove);
-        list_id(id_remove);
-        printf("Deseja realmente remover o Pokemon listado? ");
-        scanf("%c",&confirmation);
-        getchar();
-    }
-    pokemon *Pokemon_remove;
-    Pokemon_remove = malloc(sizeof(pokemon));
-    FILE *fp = fopen("Pokedex.dat", "rb");
-    if(!fp)
-    {
-        printf("Erro ao abrir o arquivo");
-        exit(1);
-    }
-    while(fread(Pokemon_remove, sizeof(pokemon), 1, fp))
-    {
-        if(Pokemon_remove->id == id_remove)
-            {
-                Pokemon_remove->ativo = 0;
-                fwrite(Pokemon_remove, sizeof(pokemon), 1, fp);
-            }
-    }
-    free(Pokemon_remove);
-    fclose(fp);
-    printf("Registro removido");
-    getchar();
     return 0;
 }
